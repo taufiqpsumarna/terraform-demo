@@ -7,16 +7,21 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = "us-east-2"
+//Define S3 Resource
+resource "aws_s3_bucket" "mybucket" {
+  bucket = "s3bucket-taufiq"
 }
 
-resource "aws_s3_bucket" "default" {
-  bucket = "TF Bucket"
+//Configure ACL
+resource "aws_s3_bucket_acl" "mybucket" {
+  bucket = aws_s3_bucket.mybucket.id
   acl    = "private"
+}
 
-  tags = {
-    Name        = "My bucket"
-    Environment = "Development"
+//Enable versioning
+resource "aws_s3_bucket_versioning" "mybucket" {
+    bucket = aws_s3_bucket.mybucket.id
+    versioning_configuration {
+    status = "Enabled"
   }
 }
